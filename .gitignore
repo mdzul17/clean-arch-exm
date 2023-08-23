@@ -1,4 +1,4 @@
 .env
 coverage/
-config
+config/database/test.json
 node_modules

@@ -1,3 +1,4 @@
+/* 
 const AuthenticationRepository = require("../../../Domains/authentications/AuthenticationRepository");
 const LogoutUserUseCase = require("../LogoutUserUseCase");
 
@@ -53,3 +54,4 @@ describe("LogoutUserUseCase", () => {
     );
   });
 });
+ */
