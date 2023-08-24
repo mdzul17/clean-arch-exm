@@ -1,4 +1,3 @@
-/* 
 const AuthenticationRepository = require("../../../Domains/authentications/AuthenticationRepository");
 const AuthenticationTokenManager = require("../../security/AuthenticationTokenManager");
 const RefreshAuthenticationUseCase = require("../RefreshAuthenticationUseCase");
@@ -37,7 +36,7 @@ describe("RefreshAuthenticationUseCase", () => {
     const mockAuthenticationRepository = new AuthenticationRepository();
     const mockAuthenticationTokenManager = new AuthenticationTokenManager();
 
-    mockAuthenticationRepository.checkAvailabityToken = jest
+    mockAuthenticationRepository.checkAvailabilityToken = jest
       .fn()
       .mockImplementation(() => Promise.resolve());
     mockAuthenticationTokenManager.verifyRefreshToken = jest
@@ -63,7 +62,7 @@ describe("RefreshAuthenticationUseCase", () => {
     expect(mockAuthenticationTokenManager.verifyRefreshToken).toBeCalledWith(
       useCasePayload.refreshToken
     );
-    expect(mockAuthenticationRepository.checkAvailabityToken).toBeCalledWith(
+    expect(mockAuthenticationRepository.checkAvailabilityToken).toBeCalledWith(
       useCasePayload.refreshToken
     );
     expect(mockAuthenticationTokenManager.decodePayload).toBeCalledWith(
@@ -76,4 +75,3 @@ describe("RefreshAuthenticationUseCase", () => {
     expect(accessToken).toEqual("some_new_access_token");
   });
 });
- */

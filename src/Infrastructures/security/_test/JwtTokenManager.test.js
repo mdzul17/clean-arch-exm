@@ -19,7 +19,7 @@ describe("JwtTokenManager", () => {
 
       expect(mockJwtToken.generate).toBeCalledWith(
         payload,
-        proccess.env.ACCESS_TOKEN_KEY
+        process.env.ACCESS_TOKEN_KEY
       );
       expect(accessToken).toEqual("mock_token");
     });

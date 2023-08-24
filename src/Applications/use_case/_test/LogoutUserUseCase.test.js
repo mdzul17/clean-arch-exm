@@ -1,4 +1,3 @@
-/* 
 const AuthenticationRepository = require("../../../Domains/authentications/AuthenticationRepository");
 const LogoutUserUseCase = require("../LogoutUserUseCase");
 
@@ -34,7 +33,7 @@ describe("LogoutUserUseCase", () => {
     };
 
     const mockAuthenticationRepository = new AuthenticationRepository();
-    mockAuthenticationRepository.checkAvailabityToken = jest
+    mockAuthenticationRepository.checkAvailabilityToken = jest
       .fn()
       .mockImplementation(() => Promise.resolve());
     mockAuthenticationRepository.deleteToken = jest
@@ -46,7 +45,7 @@ describe("LogoutUserUseCase", () => {
     });
 
     await logoutUserUseCase.execute(useCasePayload);
-    expect(mockAuthenticationRepository.checkAvailabityToken).toBeCalledWith(
+    expect(mockAuthenticationRepository.checkAvailabilityToken).toBeCalledWith(
       useCasePayload.refreshToken
     );
     expect(mockAuthenticationRepository.deleteToken).toBeCalledWith(
@@ -54,4 +53,3 @@ describe("LogoutUserUseCase", () => {
     );
   });
 });
- */

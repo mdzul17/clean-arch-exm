@@ -8,7 +8,7 @@ describe("AuthenticationRepository", () => {
       "AUTHENTICATION_REPOSITORY.METHOD_NOT_IMPLEMENTED"
     );
     await expect(
-      authenticationRepository.checkAvailabityToken({})
+      authenticationRepository.checkAvailabilityToken({})
     ).rejects.toThrowError("AUTHENTICATION_REPOSITORY.METHOD_NOT_IMPLEMENTED");
     await expect(authenticationRepository.deleteToken({})).rejects.toThrowError(
       "AUTHENTICATION_REPOSITORY.METHOD_NOT_IMPLEMENTED"

@@ -3,7 +3,7 @@ class AuthenticationRepository {
     throw new Error("AUTHENTICATION_REPOSITORY.METHOD_NOT_IMPLEMENTED");
   }
 
-  async checkAvailabityToken(payload) {
+  async checkAvailabilityToken(payload) {
     throw new Error("AUTHENTICATION_REPOSITORY.METHOD_NOT_IMPLEMENTED");
   }
 
