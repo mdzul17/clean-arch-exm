@@ -14,7 +14,8 @@ describe("NewThread entities", () => {
   it("should throw error when payload not meet data type specification", () => {
     const payload = {
       title: "title",
-      content: 123456,
+      body: 123456,
+      owner: "user-123",
     };
 
     expect(() => new NewThread(payload)).toThrowError(
@@ -25,13 +26,15 @@ describe("NewThread entities", () => {
   it("should create NewThread entities correctly", () => {
     const payload = {
       title: "title",
-      content: "123456",
+      body: "123456",
+      owner: "user-123",
     };
 
     const newThread = new NewThread(payload);
 
     expect(newThread).toBeInstanceOf(NewThread);
     expect(newThread.title).toEqual(payload.title);
-    expect(newThread.content).toEqual(payload.content);
+    expect(newThread.body).toEqual(payload.body);
+    expect(newThread.owner).toEqual(payload.owner);
   });
 });

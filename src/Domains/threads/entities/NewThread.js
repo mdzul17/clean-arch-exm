@@ -3,17 +3,19 @@ class NewThread {
     this._verifyPayload(payload);
 
     this.title = payload.title;
-    this.content = payload.content;
+    this.body = payload.body;
+    this.owner = payload.owner;
   }
 
   _verifyPayload(payload) {
-    if (!payload.title || !payload.content) {
+    if (!payload.title || !payload.body || !payload.owner) {
       throw new Error("NEW_THREAD.NOT_CONTAIN_NEEDED_PROPERTY");
     }
 
     if (
       typeof payload.title != "string" ||
-      typeof payload.content != "string"
+      typeof payload.body != "string" ||
+      !payload.owner
     ) {
       throw new Error("NEW_THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION");
     }

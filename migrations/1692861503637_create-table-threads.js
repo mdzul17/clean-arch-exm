@@ -25,18 +25,18 @@ exports.up = (pgm) => {
     posting_date: {
       type: "datetime",
       notNull: true,
-      default: "NOW() at time zone 'UTC'",
+      default: pgm.func("current_timestamp"),
     },
   });
 
-  pgm.addConstraint(
-    "threads",
-    "fk_threads.owner_users.id",
-    "FOREIGN_KEY(owner) REFERENCES users(id) ON DELETE CASCADE"
-  );
+  // pgm.addConstraint(
+  //   "threads",
+  //   "fk_threads.owner_users.id",
+  //   "FOREIGN KEY(owner) REFERENCES users(id) ON DELETE CASCADE"
+  // );
 };
 
 exports.down = (pgm) => {
-  pgm.dropConstraint("threads", "fk_threads.owner_users.id");
+  // pgm.dropConstraint("threads", "fk_threads.owner_users.id");
   pgm.dropTable("threads");
 };
