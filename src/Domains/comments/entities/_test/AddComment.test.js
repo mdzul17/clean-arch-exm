@@ -15,6 +15,7 @@ describe("AddComment", () => {
     const payload = {
       content: "test content",
       owner: 123,
+      thread_id: "thread-123",
     };
 
     expect(() => new AddComment(payload)).toThrowError(
@@ -26,6 +27,7 @@ describe("AddComment", () => {
     const payload = {
       content: "test content",
       owner: "user-123",
+      thread_id: "thread-123",
     };
 
     const addComment = new AddComment(payload);

@@ -1,5 +1,5 @@
 class ThreadsRepository {
-  async addThread() {
+  async addThread(payload) {
     throw new Error("THREADS_REPOSITORY.METHOD_NOT_IMPLEMENTED");
   }
 
@@ -7,7 +7,7 @@ class ThreadsRepository {
     throw new Error("THREADS_REPOSITORY.METHOD_NOT_IMPLEMENTED");
   }
 
-  async getThreadById() {
+  async getThreadById(id) {
     throw new Error("THREADS_REPOSITORY.METHOD_NOT_IMPLEMENTED");
   }
 }

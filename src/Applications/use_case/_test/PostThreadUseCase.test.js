@@ -23,7 +23,7 @@ describe("PostThreadUseCase", () => {
 
     mockUserRepository.getUserById = jest
       .fn()
-      .mockImplementation(() => Promise.resolve("user-123"));
+      .mockImplementation(() => Promise.resolve());
     mockThreadRepository.addThread = jest
       .fn()
       .mockImplementation(() => Promise.resolve(mockPostedThread));
