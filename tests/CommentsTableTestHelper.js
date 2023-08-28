@@ -27,6 +27,10 @@ const CommentsTableTestHelper = {
 
     return result.rows;
   },
+
+  async cleanTable() {
+    return await pool.query("TRUNCATE TABLE comments");
+  },
 };
 
 module.exports = CommentsTableTestHelper;

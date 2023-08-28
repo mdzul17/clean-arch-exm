@@ -3,6 +3,7 @@ const UserRepository = require("../../../Domains/users/UserRepository");
 const ThreadsRepository = require("../../../Domains/threads/ThreadsRepository");
 const CommentsRepository = require("../../../Domains/comments/CommentsRepository");
 const AddCommentUseCase = require("../AddCommentUserCase");
+const AuthenticationTokenManager = require("../../security/AuthenticationTokenManager");
 
 describe("AddCommentUseCase", () => {
   it("should orchestrating the add comment action correctly", async () => {
@@ -15,7 +16,13 @@ describe("AddCommentUseCase", () => {
     const mockUserRepository = new UserRepository();
     const mockThreadRepository = new ThreadsRepository();
     const mockCommentRepository = new CommentsRepository();
+    const mockAuthenticationTokenManager = new AuthenticationTokenManager();
 
+    mockAuthenticationTokenManager.decodePayload = jest
+      .fn()
+      .mockImplementation(() =>
+        Promise.resolve({ username: "dicoding", id: "user-123" })
+      );
     mockUserRepository.getUserById = jest
       .fn()
       .mockImplementation(() => Promise.resolve());
@@ -34,11 +41,12 @@ describe("AddCommentUseCase", () => {
       userRepository: mockUserRepository,
       threadRepository: mockThreadRepository,
       commentRepository: mockCommentRepository,
+      authenticationTokenManager: mockAuthenticationTokenManager,
     });
 
-    const addComment = await addCommentUseCase.execute(useCasePayload);
-
-    console.log(addComment);
+    const addComment = await addCommentUseCase.execute("some_access_token", {
+      ...useCasePayload,
+    });
 
     expect(addComment).toStrictEqual({
       id: "comment-123",
@@ -47,6 +55,9 @@ describe("AddCommentUseCase", () => {
     });
     expect(mockUserRepository.getUserById).toBeCalledWith("user-123");
     expect(mockThreadRepository.getThreadById).toBeCalledWith("thread-123");
+    expect(mockAuthenticationTokenManager.decodePayload).toBeCalledWith(
+      "some_access_token"
+    );
     expect(mockCommentRepository.addComment).toBeCalledWith(
       new AddComment({
         ...useCasePayload,

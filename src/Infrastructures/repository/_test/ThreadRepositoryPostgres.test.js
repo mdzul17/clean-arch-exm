@@ -68,7 +68,7 @@ describe("ThreadRepositoryPostgres", () => {
       const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {});
 
       await expect(
-        threadRepositoryPostgres.findThreadById("thread-124")
+        threadRepositoryPostgres.getThreadById("thread-124")
       ).rejects.toThrowError(NotFoundError);
     });
     it("it should return notFound error when thread id does not exist", async () => {
@@ -77,7 +77,7 @@ describe("ThreadRepositoryPostgres", () => {
       const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {});
 
       await expect(
-        threadRepositoryPostgres.findThreadById("thread-123")
+        threadRepositoryPostgres.getThreadById("thread-123")
       ).resolves.not.toThrowError(NotFoundError);
     });
   });

@@ -2,6 +2,7 @@ const NewThread = require("../../../Domains/threads/entities/NewThread");
 const PostedThread = require("../../../Domains/threads/entities/PostedThread");
 const UserRepository = require("../../../Domains/users/UserRepository");
 const ThreadsRepository = require("../../../Domains/threads/ThreadsRepository");
+const AuthenticationTokenManager = require("../../security/AuthenticationTokenManager");
 const PostThreadUseCase = require("../PostThreadUseCase");
 
 describe("PostThreadUseCase", () => {
@@ -20,6 +21,7 @@ describe("PostThreadUseCase", () => {
 
     const mockUserRepository = new UserRepository();
     const mockThreadRepository = new ThreadsRepository();
+    const mockAuthenticationTokenManager = new AuthenticationTokenManager();
 
     mockUserRepository.getUserById = jest
       .fn()
@@ -27,13 +29,21 @@ describe("PostThreadUseCase", () => {
     mockThreadRepository.addThread = jest
       .fn()
       .mockImplementation(() => Promise.resolve(mockPostedThread));
+    mockAuthenticationTokenManager.decodePayload = jest
+      .fn()
+      .mockImplementation(() =>
+        Promise.resolve({ username: "dicoding", id: "user-123" })
+      );
 
     const postThreadUseCase = new PostThreadUseCase({
       userRepository: mockUserRepository,
       threadRepository: mockThreadRepository,
+      authenticationTokenManager: mockAuthenticationTokenManager,
     });
 
-    const postedThread = await postThreadUseCase.execute(useCasePayload);
+    const postedThread = await postThreadUseCase.execute("some_access_token", {
+      ...useCasePayload,
+    });
 
     expect(postedThread).toStrictEqual(
       new PostedThread({
@@ -43,6 +53,9 @@ describe("PostThreadUseCase", () => {
       })
     );
 
+    expect(mockAuthenticationTokenManager.decodePayload).toBeCalledWith(
+      "some_access_token"
+    );
     expect(mockUserRepository.getUserById).toBeCalledWith("user-123");
     expect(mockThreadRepository.addThread).toBeCalledWith(
       new NewThread({
