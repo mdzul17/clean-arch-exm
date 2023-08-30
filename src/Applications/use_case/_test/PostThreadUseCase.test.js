@@ -1,7 +1,7 @@
 const NewThread = require("../../../Domains/threads/entities/NewThread");
 const PostedThread = require("../../../Domains/threads/entities/PostedThread");
 const UserRepository = require("../../../Domains/users/UserRepository");
-const ThreadsRepository = require("../../../Domains/threads/ThreadsRepository");
+const ThreadRepository = require("../../../Domains/threads/ThreadRepository");
 const AuthenticationTokenManager = require("../../security/AuthenticationTokenManager");
 const PostThreadUseCase = require("../PostThreadUseCase");
 
@@ -20,7 +20,7 @@ describe("PostThreadUseCase", () => {
     });
 
     const mockUserRepository = new UserRepository();
-    const mockThreadRepository = new ThreadsRepository();
+    const mockThreadRepository = new ThreadRepository();
     const mockAuthenticationTokenManager = new AuthenticationTokenManager();
 
     mockUserRepository.getUserById = jest

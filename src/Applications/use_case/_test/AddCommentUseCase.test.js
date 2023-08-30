@@ -1,7 +1,7 @@
 const AddComment = require("../../../Domains/comments/entities/AddComment");
 const UserRepository = require("../../../Domains/users/UserRepository");
-const ThreadsRepository = require("../../../Domains/threads/ThreadsRepository");
-const CommentsRepository = require("../../../Domains/comments/CommentsRepository");
+const ThreadRepository = require("../../../Domains/threads/ThreadRepository");
+const CommentRepository = require("../../../Domains/comments/CommentRepository");
 const AddCommentUseCase = require("../AddCommentUserCase");
 const AuthenticationTokenManager = require("../../security/AuthenticationTokenManager");
 
@@ -14,8 +14,8 @@ describe("AddCommentUseCase", () => {
     };
 
     const mockUserRepository = new UserRepository();
-    const mockThreadRepository = new ThreadsRepository();
-    const mockCommentRepository = new CommentsRepository();
+    const mockThreadRepository = new ThreadRepository();
+    const mockCommentRepository = new CommentRepository();
     const mockAuthenticationTokenManager = new AuthenticationTokenManager();
 
     mockAuthenticationTokenManager.decodePayload = jest

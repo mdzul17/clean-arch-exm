@@ -1,6 +1,9 @@
 require("dotenv").config();
 const Hapi = require("@hapi/hapi");
+const Jwt = require("@hapi/jwt");
 const users = require("../../Interfaces/http/api/users");
+const authentications = require("../../Interfaces/http/api/authentications");
+const threads = require("../../Interfaces/http/api/threads");
 const DomainErrorTranslator = require("../../Commons/exceptions/DomainErrorTranslator");
 const ClientError = require("../../Commons/exceptions/ClientError");
 
@@ -15,7 +18,34 @@ const createServer = async (container) => {
       plugin: users,
       options: { container },
     },
+    {
+      plugin: authentications,
+      options: { container },
+    },
+    {
+      plugin: threads,
+      options: { container },
+    },
+    {
+      plugin: Jwt,
+    },
   ]);
+
+  server.auth.strategy("threadapp_jwt", "jwt", {
+    keys: process.env.ACCESS_TOKEN_KEY,
+    verify: {
+      aud: false,
+      iss: false,
+      sub: false,
+      maxAgeSec: 60 * 10000,
+    },
+    validate: (artifacts) => ({
+      isValid: true,
+      credentials: {
+        id: artifacts.decoded.payload.id,
+      },
+    }),
+  });
 
   server.ext("onPreResponse", (request, h) => {
     const { response } = request;

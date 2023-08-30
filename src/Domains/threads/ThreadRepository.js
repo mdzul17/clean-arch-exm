@@ -1,4 +1,4 @@
-class ThreadsRepository {
+class ThreadRepository {
   async addThread(payload) {
     throw new Error("THREADS_REPOSITORY.METHOD_NOT_IMPLEMENTED");
   }
@@ -12,4 +12,4 @@ class ThreadsRepository {
   }
 }
 
-module.exports = ThreadsRepository;
+module.exports = ThreadRepository;

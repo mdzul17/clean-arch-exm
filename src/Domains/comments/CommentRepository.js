@@ -1,4 +1,4 @@
-class CommentsRepository {
+class CommentRepository {
   async addComment(payload) {
     throw new Error("COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED");
   }
@@ -15,4 +15,4 @@ class CommentsRepository {
   }
 }
 
-module.exports = CommentsRepository;
+module.exports = CommentRepository;

@@ -1,6 +1,6 @@
 const NotFoundError = require("../../Commons/exceptions/NotFoundError");
 const InvariantError = require("../../Commons/exceptions/InvariantError");
-const CommentRepository = require("../../Domains/comments/CommentsRepository");
+const CommentRepository = require("../../Domains/comments/CommentRepository");
 
 class CommentRepositoryPostgres extends CommentRepository {
   constructor(pool, idGenerator) {

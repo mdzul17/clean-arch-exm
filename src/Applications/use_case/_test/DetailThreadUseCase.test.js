@@ -1,6 +1,6 @@
 const DetailThreadUseCase = require("../DetailThreadUseCase");
-const ThreadsRepository = require("../../../Domains/threads/ThreadsRepository");
-const CommentsRepository = require("../../../Domains/comments/CommentsRepository");
+const ThreadRepository = require("../../../Domains/threads/ThreadRepository");
+const CommentRepository = require("../../../Domains/comments/CommentRepository");
 
 describe("DetailThreadUseCase", () => {
   it("should show deleted comment message while it deleted", async () => {
@@ -8,8 +8,8 @@ describe("DetailThreadUseCase", () => {
       id: "thread-123",
     };
 
-    const mockThreadRepository = new ThreadsRepository();
-    const mockCommentRepository = new CommentsRepository();
+    const mockThreadRepository = new ThreadRepository();
+    const mockCommentRepository = new CommentRepository();
 
     mockThreadRepository.getThreadById = jest.fn().mockImplementation(() =>
       Promise.resolve({

@@ -1,8 +1,8 @@
-const CommentsRepository = require("../CommentsRepository");
+const CommentRepository = require("../CommentRepository");
 
 describe("CommentsRepository", function () {
   it("should throw an error when invoke abstact behavior ", async () => {
-    const commentRepository = new CommentsRepository();
+    const commentRepository = new CommentRepository();
 
     await expect(commentRepository.addComment).rejects.toThrowError(
       "COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED"
