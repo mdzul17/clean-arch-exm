@@ -9,7 +9,8 @@
     "start:dev": "jest --setupFiles dotenv/config",
     "test:watch": "jest --watchAll --coverage --setupFiles dotenv/config",
     "migrate": "node-pg-migrate",
-    "migrate:test": "node-pg-migrate -f config/database/test.json"
+    "migrate:test": "node-pg-migrate -f config/database/test.json",
+    "start-dev": "nodemon src/app.js"
   },
   "keywords": [],
   "author": "",

@@ -29,3 +29,5 @@ const routes = (handler) => [
     handler: handler.getDetailThreadHandler,
   },
 ];
+
+module.exports = routes;

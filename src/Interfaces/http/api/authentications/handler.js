@@ -4,6 +4,8 @@ const LogoutUserUseCase = require("../../../../Applications/use_case/LogoutUserU
 
 class AuthenticationsHandler {
   constructor(container) {
+    this._container = container;
+
     this.postAuthenticationHandler = this.postAuthenticationHandler.bind(this);
     this.putAuthenticationHandler = this.putAuthenticationHandler.bind(this);
     this.deleteAuthenticationHandler =
@@ -16,6 +18,8 @@ class AuthenticationsHandler {
       req.payload
     );
 
+    console.log(accessToken);
+
     const response = h.response({
       status: "success",
       data: {
@@ -23,6 +27,8 @@ class AuthenticationsHandler {
         refreshToken,
       },
     });
+
+    console.log(response);
 
     response.code(201);
     return response;

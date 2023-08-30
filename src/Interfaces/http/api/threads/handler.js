@@ -6,6 +6,11 @@ const DetailThreadUseCase = require("../../../../Applications/use_case/DetailThr
 class ThreadsHandler {
   constructor(container) {
     this._container = container;
+
+    this.postThreadHandler = this.postThreadHandler.bind(this);
+    this.postCommentHandler = this.postCommentHandler.bind(this);
+    this.deleteCommentHandler = this.deleteCommentHandler.bind(this);
+    this.getDetailThreadHandler = this.getDetailThreadHandler.bind(this);
   }
 
   async postThreadHandler(req, h) {

@@ -13,24 +13,9 @@ const createServer = async (container) => {
     port: process.env.PORT,
   });
 
-  await server.register([
-    {
-      plugin: users,
-      options: { container },
-    },
-    {
-      plugin: authentications,
-      options: { container },
-    },
-    {
-      plugin: threads,
-      options: { container },
-    },
-    {
-      plugin: Jwt,
-    },
-  ]);
-
+  await server.register({
+    plugin: Jwt,
+  });
   server.auth.strategy("threadapp_jwt", "jwt", {
     keys: process.env.ACCESS_TOKEN_KEY,
     verify: {
@@ -46,6 +31,21 @@ const createServer = async (container) => {
       },
     }),
   });
+
+  await server.register([
+    {
+      plugin: users,
+      options: { container },
+    },
+    {
+      plugin: authentications,
+      options: { container },
+    },
+    {
+      plugin: threads,
+      options: { container },
+    },
+  ]);
 
   server.ext("onPreResponse", (request, h) => {
     const { response } = request;
