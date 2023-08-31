@@ -12,13 +12,6 @@ class DetailThreadUseCase {
       useCasePayload.id
     );
 
-    comments.forEach((element) => {
-      element.is_delete == 0
-        ? (element.content = "**komentar telah dihapus**")
-        : element.content;
-      delete element.is_delete;
-    });
-
     return { thread: { ...thread, comments: comments } };
   }
 }

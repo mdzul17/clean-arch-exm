@@ -81,14 +81,14 @@ container.register([
     key: ThreadRepository.name,
     Class: ThreadRepositoryPostgres,
     parameter: {
-      dependencies: [{ concrete: pool }],
+      dependencies: [{ concrete: pool }, { concrete: nanoid }],
     },
   },
   {
     key: CommentRepository.name,
     Class: CommentRepositoryPostgres,
     parameter: {
-      dependencies: [{ concrete: pool }],
+      dependencies: [{ concrete: pool }, { concrete: nanoid }],
     },
   },
 ]);
@@ -179,10 +179,6 @@ container.register([
         {
           name: "threadRepository",
           internal: ThreadRepository.name,
-        },
-        {
-          name: "commentRepository",
-          internal: CommentRepository.name,
         },
       ],
     },

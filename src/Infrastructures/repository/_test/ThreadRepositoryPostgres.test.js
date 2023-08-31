@@ -63,7 +63,7 @@ describe("ThreadRepositoryPostgres", () => {
 
   describe("getThreadById function", () => {
     it("it should return notFound error when thread id does not exist", async () => {
-      await ThreadsTableTestHelper.addThread({});
+      await ThreadsTableTestHelper.addThread({ id: "thread-123" });
 
       const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {});
 

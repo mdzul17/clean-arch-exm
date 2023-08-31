@@ -29,7 +29,6 @@ describe("AuthenticationRepositoryPostgres", () => {
 
   describe("checkAvailabilityToken function", () => {
     it("should throw InvariantError if token not available", async () => {
-      await AuthenticationsTableTestHelper.addToken("token");
       const authenticationRepository = new AuthenticationRepositoryPostgres(
         pool
       );
@@ -41,6 +40,7 @@ describe("AuthenticationRepositoryPostgres", () => {
     });
 
     it("should not throw InvariantError if token available", async () => {
+      await AuthenticationsTableTestHelper.addToken("token");
       const authenticationRepository = new AuthenticationRepositoryPostgres(
         pool
       );

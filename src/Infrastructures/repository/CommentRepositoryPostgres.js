@@ -1,5 +1,6 @@
 const NotFoundError = require("../../Commons/exceptions/NotFoundError");
 const InvariantError = require("../../Commons/exceptions/InvariantError");
+const AuthorizationError = require("../../Commons/exceptions/AuthorizationError");
 const CommentRepository = require("../../Domains/comments/CommentRepository");
 
 class CommentRepositoryPostgres extends CommentRepository {
@@ -23,21 +24,52 @@ class CommentRepositoryPostgres extends CommentRepository {
     return result.rows[0];
   }
 
-  // async getCommentById(id) {
-  //   const query = {
-  //     text: "SELECT * FROM comments WHERE id = $1",
-  //     values: [id],
-  //   };
-  //   const result = await this._pool.query(query);
+  async getCommentsByThreadId(id) {
+    const query = {
+      text: "SELECT a.id, b.username, a.date, case when a.is_delete = '1' then '**komentar telah dihapus**' else a.content end as content FROM comments a LEFT JOIN users b ON b.id = a.owner WHERE thread_id = $1 order by date asc",
+      values: [id],
+    };
+    const result = await this._pool.query(query);
 
-  //   if (!result.rows.length) {
-  //     throw new NotFoundError("Comment tidak ditemukan!");
-  //   }
+    if (!result.rows.length) {
+      throw new NotFoundError("Comment tidak ditemukan!");
+    }
 
-  //   console.log(result);
+    return result.rows;
+  }
 
-  //   return result.rows[0];
-  // }
+  async deleteComment(id) {
+    const query = {
+      text: "UPDATE comments SET is_delete = 1 WHERE id = $1 RETURNING id",
+      values: [id],
+    };
+    const result = await this._pool.query(query);
+
+    if (!result.rows.length) {
+      throw new NotFoundError("Comment tidak ditemukan!");
+    }
+
+    return result.rows;
+  }
+
+  async verifyCommentOwner(id, owner) {
+    const query = {
+      text: "SELECT * FROM comments WHERE id = $1",
+      values: [id],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rows.length) {
+      throw new NotFoundError("Comment tidak ditemukan");
+    }
+
+    const comment = result.rows[0];
+
+    if (comment.owner !== owner) {
+      throw new AuthorizationError("Anda tidak berhak mengakses resource ini");
+    }
+  }
 }
 
 module.exports = CommentRepositoryPostgres;

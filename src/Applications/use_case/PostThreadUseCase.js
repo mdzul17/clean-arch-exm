@@ -1,24 +1,17 @@
 const NewThread = require("../../Domains/threads/entities/NewThread");
 
 class PostThreadUseCase {
-  constructor({
-    userRepository,
-    threadRepository,
-    authenticationTokenManager,
-  }) {
+  constructor({ userRepository, threadRepository }) {
     this._userRepository = userRepository;
     this._threadRepository = threadRepository;
-    this._authenticationTokenManager = authenticationTokenManager;
   }
 
   async execute(id, useCasePayload) {
-    const { username, id: user_id } =
-      await this._authenticationTokenManager.decodePayload(id);
-    await this._userRepository.getUserById(user_id);
+    await this._userRepository.getUserById(id);
     const newThread = new NewThread({
       title: useCasePayload.title,
       body: useCasePayload.body,
-      owner: user_id,
+      owner: id,
     });
 
     return this._threadRepository.addThread(newThread);

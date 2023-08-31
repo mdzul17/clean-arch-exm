@@ -2,26 +2,23 @@ const NewThread = require("../../../Domains/threads/entities/NewThread");
 const PostedThread = require("../../../Domains/threads/entities/PostedThread");
 const UserRepository = require("../../../Domains/users/UserRepository");
 const ThreadRepository = require("../../../Domains/threads/ThreadRepository");
-const AuthenticationTokenManager = require("../../security/AuthenticationTokenManager");
 const PostThreadUseCase = require("../PostThreadUseCase");
 
 describe("PostThreadUseCase", () => {
   it("should orchestrating the post thread action properly", async () => {
     const useCasePayload = {
       title: "title",
-      body: "123456",
-      owner: "user-123",
+      body: "contoh thread",
     };
 
     const mockPostedThread = new PostedThread({
       id: "thread-123",
       title: useCasePayload.title,
-      owner: useCasePayload.owner,
+      owner: "user-123",
     });
 
     const mockUserRepository = new UserRepository();
     const mockThreadRepository = new ThreadRepository();
-    const mockAuthenticationTokenManager = new AuthenticationTokenManager();
 
     mockUserRepository.getUserById = jest
       .fn()
@@ -29,19 +26,13 @@ describe("PostThreadUseCase", () => {
     mockThreadRepository.addThread = jest
       .fn()
       .mockImplementation(() => Promise.resolve(mockPostedThread));
-    mockAuthenticationTokenManager.decodePayload = jest
-      .fn()
-      .mockImplementation(() =>
-        Promise.resolve({ username: "dicoding", id: "user-123" })
-      );
 
     const postThreadUseCase = new PostThreadUseCase({
       userRepository: mockUserRepository,
       threadRepository: mockThreadRepository,
-      authenticationTokenManager: mockAuthenticationTokenManager,
     });
 
-    const postedThread = await postThreadUseCase.execute("some_access_token", {
+    const postedThread = await postThreadUseCase.execute("user-123", {
       ...useCasePayload,
     });
 
@@ -49,17 +40,15 @@ describe("PostThreadUseCase", () => {
       new PostedThread({
         id: "thread-123",
         title: useCasePayload.title,
-        owner: useCasePayload.owner,
+        owner: "user-123",
       })
     );
 
-    expect(mockAuthenticationTokenManager.decodePayload).toBeCalledWith(
-      "some_access_token"
-    );
     expect(mockUserRepository.getUserById).toBeCalledWith("user-123");
     expect(mockThreadRepository.addThread).toBeCalledWith(
       new NewThread({
         ...useCasePayload,
+        owner: "user-123",
       })
     );
   });

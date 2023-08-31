@@ -143,7 +143,12 @@ describe("UserRepositoryPostgres", () => {
 
       const userId = await userRepository.getUserById("user-123");
 
-      expect(userId).toHaveLength(1);
+      expect(userId).toEqual({
+        fullname: "Dicoding Indonesia",
+        id: "user-123",
+        password: "secret",
+        username: "dicoding",
+      });
     });
   });
 });

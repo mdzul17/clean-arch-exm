@@ -15,7 +15,7 @@ class NewThread {
     if (
       typeof payload.title != "string" ||
       typeof payload.body != "string" ||
-      !payload.owner
+      typeof payload.owner != "string"
     ) {
       throw new Error("NEW_THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION");
     }

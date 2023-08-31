@@ -22,7 +22,7 @@ exports.up = (pgm) => {
       type: "VARCHAR(50)",
       notNull: true,
     },
-    posting_date: {
+    date: {
       type: "datetime",
       notNull: true,
       default: pgm.func("current_timestamp"),

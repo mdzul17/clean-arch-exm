@@ -28,15 +28,13 @@ describe("DetailThreadUseCase", () => {
             id: "comment-123",
             username: "dicoding",
             date: "2021-08-08T07:19:09.775Z",
-            content: "sebuah comment",
-            is_delete: 0,
+            content: "**komentar telah dihapus**",
           },
           {
             id: "comment-124",
             username: "johndoe",
             date: "2021-08-08T07:22:33.555Z",
             content: "sebuah comment",
-            is_delete: 1,
           },
         ])
       );

@@ -17,11 +17,8 @@ class ThreadsHandler {
     const postThreadUseCase = this._container.getInstance(
       PostThreadUseCase.name
     );
-
-    const thread = await postThreadUseCase.execute(
-      req.auth.credentials,
-      req.payload
-    );
+    const { id } = req.auth.credentials;
+    const thread = await postThreadUseCase.execute(id, req.payload);
 
     const response = h.response({
       status: "success",
@@ -39,9 +36,10 @@ class ThreadsHandler {
       AddCommentUseCase.name
     );
 
-    const { threadId } = request.params;
+    const { threadId } = req.params;
+    const { id } = req.auth.credentials;
 
-    const comment = await addCommentUseCase.execute(req.auth.credentials, {
+    const comment = await addCommentUseCase.execute(id, {
       ...req.payload,
       thread_id: threadId,
     });
@@ -62,9 +60,10 @@ class ThreadsHandler {
       DeleteCommentUseCase.name
     );
 
-    const { threadId, commentId } = request.params;
+    const { threadId, commentId } = req.params;
+    const { id } = req.auth.credentials;
 
-    deleteCommentUseCase.execute(req.auth.credentials, {
+    await deleteCommentUseCase.execute(id, {
       thread_id: threadId,
       id: commentId,
     });
@@ -89,7 +88,7 @@ class ThreadsHandler {
     const response = h.response({
       status: "success",
       data: {
-        thread,
+        ...thread,
       },
     });
 

@@ -3,26 +3,18 @@ const UserRepository = require("../../../Domains/users/UserRepository");
 const ThreadRepository = require("../../../Domains/threads/ThreadRepository");
 const CommentRepository = require("../../../Domains/comments/CommentRepository");
 const AddCommentUseCase = require("../AddCommentUserCase");
-const AuthenticationTokenManager = require("../../security/AuthenticationTokenManager");
 
 describe("AddCommentUseCase", () => {
   it("should orchestrating the add comment action correctly", async () => {
     const useCasePayload = {
       content: "test content",
-      owner: "user-123",
       thread_id: "thread-123",
     };
 
     const mockUserRepository = new UserRepository();
     const mockThreadRepository = new ThreadRepository();
     const mockCommentRepository = new CommentRepository();
-    const mockAuthenticationTokenManager = new AuthenticationTokenManager();
 
-    mockAuthenticationTokenManager.decodePayload = jest
-      .fn()
-      .mockImplementation(() =>
-        Promise.resolve({ username: "dicoding", id: "user-123" })
-      );
     mockUserRepository.getUserById = jest
       .fn()
       .mockImplementation(() => Promise.resolve());
@@ -41,26 +33,23 @@ describe("AddCommentUseCase", () => {
       userRepository: mockUserRepository,
       threadRepository: mockThreadRepository,
       commentRepository: mockCommentRepository,
-      authenticationTokenManager: mockAuthenticationTokenManager,
     });
 
-    const addComment = await addCommentUseCase.execute("some_access_token", {
+    const addComment = await addCommentUseCase.execute("user-123", {
       ...useCasePayload,
     });
 
     expect(addComment).toStrictEqual({
       id: "comment-123",
       content: useCasePayload.content,
-      owner: useCasePayload.owner,
+      owner: "user-123",
     });
     expect(mockUserRepository.getUserById).toBeCalledWith("user-123");
     expect(mockThreadRepository.getThreadById).toBeCalledWith("thread-123");
-    expect(mockAuthenticationTokenManager.decodePayload).toBeCalledWith(
-      "some_access_token"
-    );
     expect(mockCommentRepository.addComment).toBeCalledWith(
       new AddComment({
         ...useCasePayload,
+        owner: "user-123",
       })
     );
   });

@@ -18,8 +18,6 @@ class AuthenticationsHandler {
       req.payload
     );
 
-    console.log(accessToken);
-
     const response = h.response({
       status: "success",
       data: {
@@ -27,9 +25,6 @@ class AuthenticationsHandler {
         refreshToken,
       },
     });
-
-    console.log(response);
-
     response.code(201);
     return response;
   }
