@@ -5,10 +5,10 @@ class DetailThreadUseCase {
   }
 
   async execute(useCasePayload) {
-    let comments = await this._commentRepository.getCommentsByThreadId(
+    const thread = await this._threadRepository.getThreadById(
       useCasePayload.id
     );
-    const thread = await this._threadRepository.getThreadById(
+    const comments = await this._commentRepository.getCommentsByThreadId(
       useCasePayload.id
     );
 

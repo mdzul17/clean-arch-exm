@@ -5,23 +5,28 @@ const pool = require("../../database/postgres/pool");
 const ThreadRepositoryPostgres = require("../ThreadRepositoryPostgres");
 const NewThread = require("../../../Domains/threads/entities/NewThread");
 const PostedThread = require("../../../Domains/threads/entities/PostedThread");
+const UsersTableTestHelper = require("../../../../tests/UsersTableTestHelper");
 
 describe("ThreadRepositoryPostgres", () => {
   afterEach(async () => {
     await ThreadsTableTestHelper.cleanTable();
+    await UsersTableTestHelper.cleanTable();
   });
 
   afterAll(async () => {
     await pool.end();
   });
 
+  beforeEach(async () => {
+    await UsersTableTestHelper.addUser({ id: "user-123" });
+  });
+
   describe("addThread function", () => {
     it("should persist adding thread", async () => {
-      const owner_id = "user-123";
       const addThread = new NewThread({
         title: "title",
         body: "123456",
-        owner: owner_id,
+        owner: "user-123",
       });
 
       const fakeIdGenerator = () => "123";
@@ -36,11 +41,10 @@ describe("ThreadRepositoryPostgres", () => {
     });
 
     it("should return registered thread correctly", async () => {
-      const owner_id = "user-123";
       const addThread = new NewThread({
         title: "title",
         body: "123456",
-        owner: owner_id,
+        owner: "user-123",
       });
 
       const fakeIdGenerator = () => "123";
@@ -71,7 +75,7 @@ describe("ThreadRepositoryPostgres", () => {
         threadRepositoryPostgres.getThreadById("thread-124")
       ).rejects.toThrowError(NotFoundError);
     });
-    it("it should return notFound error when thread id does not exist", async () => {
+    it("it should not return notFound error when thread id does not exist", async () => {
       await ThreadsTableTestHelper.addThread({});
 
       const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {});

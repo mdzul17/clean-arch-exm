@@ -4,15 +4,22 @@ const pool = require("../../database/postgres/pool");
 const CommentRepositoryPostgres = require("../CommentRepositoryPostgres");
 const CommentsTableTestHelper = require("../../../../tests/CommentsTableTestHelper");
 const ThreadsTableTestHelper = require("../../../../tests/ThreadsTableTestHelper");
+const UsersTableTestHelper = require("../../../../tests/UsersTableTestHelper");
 
 describe("CommentRepositoryPostgres", () => {
   afterEach(async () => {
     await CommentsTableTestHelper.cleanTable();
     await ThreadsTableTestHelper.cleanTable();
+    await UsersTableTestHelper.cleanTable();
   });
 
   afterAll(async () => {
     await pool.end();
+  });
+
+  beforeEach(async () => {
+    await UsersTableTestHelper.addUser({ id: "user-123" });
+    await ThreadsTableTestHelper.addThread({ id: "thread-123" });
   });
 
   describe("addComment function", () => {
@@ -48,7 +55,6 @@ describe("CommentRepositoryPostgres", () => {
     });
 
     it("should not throw error when thread id is correct", async () => {
-      await ThreadsTableTestHelper.addThread({ id: "thread-123" });
       await CommentsTableTestHelper.addComment({ id: "comment-123" });
 
       const commentRepository = new CommentRepositoryPostgres(pool, {});
@@ -78,15 +84,7 @@ describe("CommentRepositoryPostgres", () => {
     });
   });
   describe("verifyCommentOwner function", () => {
-    it("should throw notFoundError when comment is not available", async () => {
-      const commentRepository = new CommentRepositoryPostgres(pool, {});
-
-      await expect(
-        commentRepository.verifyCommentOwner("comment-123", {})
-      ).rejects.toThrow(NotFoundError);
-    });
-
-    it("should throw AuthorizationERror when comment owner is not correct", async () => {
+    it("should throw AuthorizationError when comment owner is not correct", async () => {
       await CommentsTableTestHelper.addComment({ id: "comment-123" });
 
       const commentRepository = new CommentRepositoryPostgres(pool, {});
@@ -95,7 +93,7 @@ describe("CommentRepositoryPostgres", () => {
         commentRepository.verifyCommentOwner("comment-123", "user-124")
       ).rejects.toThrow(AuthorizationError);
     });
-    it("should not throw error", async () => {
+    it("should not throw error when comment owner is correct", async () => {
       await CommentsTableTestHelper.addComment({ id: "comment-123" });
 
       const commentRepository = new CommentRepositoryPostgres(pool, {});

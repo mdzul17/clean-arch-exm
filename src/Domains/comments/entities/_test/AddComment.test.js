@@ -34,5 +34,6 @@ describe("AddComment", () => {
 
     expect(addComment.content).toEqual(payload.content);
     expect(addComment.owner).toEqual(payload.owner);
+    expect(addComment.thread_id).toEqual(payload.thread_id);
   });
 });
