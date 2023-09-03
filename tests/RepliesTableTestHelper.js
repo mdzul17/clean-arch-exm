@@ -30,7 +30,7 @@ const CommentsTableTestHelper = {
   },
 
   async cleanTable() {
-    return await pool.query("TRUNCATE TABLE replies CASCADE");
+    return await pool.query("DELETE FROM replies");
   },
 };
 

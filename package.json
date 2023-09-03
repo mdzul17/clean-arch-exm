@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --watchAll --coverage --setupFiles dotenv/config",
+    "test": "jest --watchAll --coverage --setupFiles dotenv/config --runInBand",
     "start": "node src/app.js",
     "start:dev": "jest --setupFiles dotenv/config",
-    "test:watch": "jest --watchAll --coverage --setupFiles dotenv/config",
+    "test:watch": "jest --watchAll --coverage --setupFiles dotenv/config --runInBand",
     "migrate": "node-pg-migrate",
     "migrate:test": "node-pg-migrate -f config/database/test.json",
     "start-dev": "nodemon src/app.js"

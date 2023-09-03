@@ -46,7 +46,6 @@ describe("CommentRepositoryPostgres", () => {
   });
   describe("getCommentsByThreadId function", () => {
     it("should throw error when thread id is not correct", async () => {
-      await CommentsTableTestHelper.addComment({ id: "comment-123" });
       const commentRepository = new CommentRepositoryPostgres(pool, {});
 
       await expect(
@@ -95,7 +94,6 @@ describe("CommentRepositoryPostgres", () => {
     });
     it("should not throw error when comment owner is correct", async () => {
       await CommentsTableTestHelper.addComment({ id: "comment-123" });
-
       const commentRepository = new CommentRepositoryPostgres(pool, {});
 
       await expect(

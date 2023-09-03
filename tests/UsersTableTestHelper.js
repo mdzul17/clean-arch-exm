@@ -28,7 +28,7 @@ const UsersTableTestHelper = {
   },
 
   async cleanTable() {
-    await pool.query("TRUNCATE TABLE users CASCADE");
+    await pool.query("DELETE FROM users");
   },
 };
 
