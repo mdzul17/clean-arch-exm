@@ -31,10 +31,6 @@ class CommentRepositoryPostgres extends CommentRepository {
     };
     const result = await this._pool.query(query);
 
-    if (!result.rows.length) {
-      throw new NotFoundError("Comment tidak ditemukan!");
-    }
-
     return result.rows;
   }
 
@@ -69,6 +65,20 @@ class CommentRepositoryPostgres extends CommentRepository {
     if (comment.owner !== owner) {
       throw new AuthorizationError("Anda tidak berhak mengakses resource ini");
     }
+  }
+
+  async getCommentById(id) {
+    const query = {
+      text: "SELECT a.id, a.content, b.username, a.date, a.thread_id FROM comments a LEFT JOIN users b ON b.id = a.owner WHERE a.id = $1",
+      values: [id],
+    };
+    const result = await this._pool.query(query);
+
+    if (!result.rows.length) {
+      throw new NotFoundError("Comment tidak ditemukan!");
+    }
+
+    return result.rows[0];
   }
 }
 

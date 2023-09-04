@@ -68,36 +68,20 @@ describe("ReplyRepositoryPostgres", () => {
     });
   });
 
-  describe("getReplyByCommentAndThreadId", () => {
-    it("should throw error when thread id is not correct", async () => {
+  describe("getReplyByThreadId", () => {
+    it("should have length 0 when thread id is not correct or empty", async () => {
       await RepliesTableTestHelper.addReply({ id: "reply-123" });
 
       const replyRepository = new ReplyRepositoryPostgres(pool, {});
-
-      await expect(
-        replyRepository.getReplyByCommentAndThreadId({}, "thread-124")
-      ).rejects.toThrow(NotFoundError);
+      const reply = await replyRepository.getReplyByThreadId("thread-124");
+      expect(reply).toHaveLength(0);
     });
-    it("should throw error when comment id is not correct", async () => {
+    it("should not throw error when thread id is correct", async () => {
       await RepliesTableTestHelper.addReply({ id: "reply-123" });
 
       const replyRepository = new ReplyRepositoryPostgres(pool, {});
-
-      await expect(
-        replyRepository.getReplyByCommentAndThreadId("comment-124", {})
-      ).rejects.toThrow(NotFoundError);
-    });
-    it("should not throw error when thread and comment id is correct", async () => {
-      await RepliesTableTestHelper.addReply({ id: "reply-123" });
-
-      const replyRepository = new ReplyRepositoryPostgres(pool, {});
-
-      await expect(
-        replyRepository.getReplyByCommentAndThreadId(
-          "comment-123",
-          "thread-123"
-        )
-      ).resolves.not.toThrow(NotFoundError);
+      const reply = await replyRepository.getReplyByThreadId("thread-123");
+      expect(reply).toHaveLength(1);
     });
   });
 

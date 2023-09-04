@@ -45,22 +45,25 @@ describe("CommentRepositoryPostgres", () => {
     });
   });
   describe("getCommentsByThreadId function", () => {
-    it("should throw error when thread id is not correct", async () => {
+    it("should have length 0 when thread id is not correct or not found", async () => {
       const commentRepository = new CommentRepositoryPostgres(pool, {});
 
-      await expect(
-        commentRepository.getCommentsByThreadId("thread-124")
-      ).rejects.toThrow(NotFoundError);
+      const comment = await commentRepository.getCommentsByThreadId(
+        "thread-124"
+      );
+
+      expect(comment).toHaveLength(0);
     });
 
-    it("should not throw error when thread id is correct", async () => {
+    it("should have length 1 when thread id is correct or available", async () => {
       await CommentsTableTestHelper.addComment({ id: "comment-123" });
 
       const commentRepository = new CommentRepositoryPostgres(pool, {});
+      const comment = await commentRepository.getCommentsByThreadId(
+        "thread-123"
+      );
 
-      await expect(
-        commentRepository.getCommentsByThreadId("thread-123")
-      ).resolves.not.toThrow(NotFoundError);
+      expect(comment).toHaveLength(1);
     });
   });
   describe("deleteComment function", () => {

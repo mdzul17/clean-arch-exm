@@ -57,16 +57,12 @@ class ReplyRepositoryPostgres extends ReplyRepository {
     }
   }
 
-  async getReplyByCommentAndThreadId(comment_id, thread_id) {
+  async getReplyByThreadId(thread_id) {
     const query = {
-      text: "SELECT a.id, b.username, a.date, case when a.is_delete = '1' then '**balasan telah dihapus**' else a.content end as content FROM replies a LEFT JOIN users b ON b.id = a.owner WHERE comment_id = $1 AND thread_id = $2 order by date asc",
-      values: [comment_id, thread_id],
+      text: "SELECT a.id, b.username, a.date, case when a.is_delete = '1' then '**balasan telah dihapus**' else a.content end as content, a.comment_id FROM replies a LEFT JOIN users b ON b.id = a.owner WHERE thread_id = $1 order by date asc",
+      values: [thread_id],
     };
     const result = await this._pool.query(query);
-
-    if (!result.rows.length) {
-      throw new NotFoundError("Reply tidak ditemukan!");
-    }
 
     return result.rows;
   }

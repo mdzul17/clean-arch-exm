@@ -31,6 +31,11 @@ const AddCommentUseCase = require("../Applications/use_case/AddCommentUserCase")
 const DeleteCommentUseCase = require("../Applications/use_case/DeleteCommentUseCase");
 const CommentRepositoryPostgres = require("../Infrastructures/repository/CommentRepositoryPostgres");
 
+const ReplyRepository = require("../Domains/replies/ReplyRepository");
+const AddReplyUseCase = require("../Applications/use_case/AddReplyUseCase");
+const DeleteReplyUseCase = require("../Applications/use_case/DeleteReplyUseCase");
+const ReplyRepositoryPostgres = require("../Infrastructures/repository/ReplyRepositoryPostgres");
+
 const container = createContainer();
 
 container.register([
@@ -87,6 +92,13 @@ container.register([
   {
     key: CommentRepository.name,
     Class: CommentRepositoryPostgres,
+    parameter: {
+      dependencies: [{ concrete: pool }, { concrete: nanoid }],
+    },
+  },
+  {
+    key: ReplyRepository.name,
+    Class: ReplyRepositoryPostgres,
     parameter: {
       dependencies: [{ concrete: pool }, { concrete: nanoid }],
     },
@@ -201,10 +213,6 @@ container.register([
           name: "commentRepository",
           internal: CommentRepository.name,
         },
-        {
-          name: "authenticationTokenManager",
-          internal: AuthenticationTokenManager.name,
-        },
       ],
     },
   },
@@ -226,10 +234,6 @@ container.register([
           name: "commentRepository",
           internal: CommentRepository.name,
         },
-        {
-          name: "authenticationTokenManager",
-          internal: AuthenticationTokenManager.name,
-        },
       ],
     },
   },
@@ -246,6 +250,60 @@ container.register([
         {
           name: "commentRepository",
           internal: CommentRepository.name,
+        },
+        {
+          name: "replyRepository",
+          internal: ReplyRepository.name,
+        },
+      ],
+    },
+  },
+  {
+    key: AddReplyUseCase.name,
+    Class: AddReplyUseCase,
+    parameter: {
+      injectType: "destructuring",
+      dependencies: [
+        {
+          name: "userRepository",
+          internal: UserRepository.name,
+        },
+        {
+          name: "threadRepository",
+          internal: ThreadRepository.name,
+        },
+        {
+          name: "commentRepository",
+          internal: CommentRepository.name,
+        },
+        {
+          name: "replyRepository",
+          internal: ReplyRepository.name,
+        },
+      ],
+    },
+  },
+  {
+    key: DeleteReplyUseCase.name,
+    Class: DeleteReplyUseCase,
+    parameter: {
+      injectType: "destructuring",
+      dependencies: [
+        {
+          name: "userRepository",
+          internal: UserRepository.name,
+        },
+        {
+          name: "threadRepository",
+          internal: ThreadRepository.name,
+        },
+        {
+          name: "commentRepository",
+          internal: CommentRepository.name,
+        },
+        {
+          name: "replyRepository",
+          internal: ReplyRepository.name,
         },
       ],
     },

@@ -45,6 +45,12 @@ DomainErrorTranslator._directories = {
   "NEW_THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION": new InvariantError(
     "judul, konten, dan owner harus berupa string"
   ),
+  "ADD_REPLY.NOT_CONTAIN_NEEDED_PROPERTY": new InvariantError(
+    "harus mengirimkan konten, owner, id thread dan id comment"
+  ),
+  "ADD_REPLY.NOT_MEET_DATA_TYPE_SPECIFICATION": new InvariantError(
+    "konten, owner, thread dan comment id harus berupa string"
+  ),
 };
 
 module.exports = DomainErrorTranslator;
