@@ -106,4 +106,24 @@ describe("ReplyRepositoryPostgres", () => {
       ).resolves.not.toThrow(AuthorizationError);
     });
   });
+
+  describe("verifyReplyAvailability function", () => {
+    it("should throw NotFoundError when reply is not available", async () => {
+      await RepliesTableTestHelper.addReply({ id: "reply-123" });
+
+      const replyRepository = new ReplyRepositoryPostgres(pool, {});
+
+      await expect(
+        replyRepository.verifyReplyAvailability("reply-124")
+      ).rejects.toThrow(NotFoundError);
+    });
+    it("should not throw error when reply is available", async () => {
+      await RepliesTableTestHelper.addReply({ id: "reply-123" });
+      const replyRepository = new ReplyRepositoryPostgres(pool, {});
+
+      await expect(
+        replyRepository.verifyReplyAvailability("reply-123")
+      ).resolves.not.toThrow(NotFoundError);
+    });
+  });
 });

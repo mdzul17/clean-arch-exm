@@ -1,4 +1,3 @@
-const UserRepository = require("../../../Domains/users/UserRepository");
 const ThreadRepository = require("../../../Domains/threads/ThreadRepository");
 const CommentRepository = require("../../../Domains/comments/CommentRepository");
 const ReplyRepository = require("../../../Domains/replies/ReplyRepository");
@@ -12,18 +11,14 @@ describe("DeleteCommentUseCase", () => {
       comment_id: "comment-123",
     };
 
-    const mockUserRepository = new UserRepository();
     const mockThreadRepository = new ThreadRepository();
     const mockCommentRepository = new CommentRepository();
     const mockReplyRepository = new ReplyRepository();
 
-    mockUserRepository.getUserById = jest
+    mockThreadRepository.verifyThreadAvailability = jest
       .fn()
       .mockImplementation(() => Promise.resolve());
-    mockThreadRepository.getThreadById = jest
-      .fn()
-      .mockImplementation(() => Promise.resolve());
-    mockCommentRepository.getCommentById = jest
+    mockCommentRepository.verifyCommentAvailability = jest
       .fn()
       .mockImplementation(() => Promise.resolve());
     mockReplyRepository.verifyReplyOwner = jest
@@ -34,7 +29,6 @@ describe("DeleteCommentUseCase", () => {
       .mockImplementation(() => Promise.resolve());
 
     const deleteCommentUseCase = new DeleteReplyUseCase({
-      userRepository: mockUserRepository,
       threadRepository: mockThreadRepository,
       commentRepository: mockCommentRepository,
       replyRepository: mockReplyRepository,
@@ -44,9 +38,12 @@ describe("DeleteCommentUseCase", () => {
       ...useCasePayload,
     });
 
-    expect(mockUserRepository.getUserById).toBeCalledWith("user-123");
-    expect(mockThreadRepository.getThreadById).toBeCalledWith("thread-123");
-    expect(mockCommentRepository.getCommentById).toBeCalledWith("comment-123");
+    expect(mockThreadRepository.verifyThreadAvailability).toBeCalledWith(
+      "thread-123"
+    );
+    expect(mockCommentRepository.verifyCommentAvailability).toBeCalledWith(
+      "comment-123"
+    );
     expect(mockReplyRepository.verifyReplyOwner).toBeCalledWith(
       useCasePayload.id,
       "user-123"

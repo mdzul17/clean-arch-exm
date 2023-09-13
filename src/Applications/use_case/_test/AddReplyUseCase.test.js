@@ -1,5 +1,4 @@
 const AddReply = require("../../../Domains/replies/entities/AddReply");
-const UserRepository = require("../../../Domains/users/UserRepository");
 const ThreadRepository = require("../../../Domains/threads/ThreadRepository");
 const CommentRepository = require("../../../Domains/comments/CommentRepository");
 const ReplyRepository = require("../../../Domains/replies/ReplyRepository");
@@ -15,16 +14,12 @@ describe("AddReplyUseCase", () => {
 
     const mockCommentRepository = new CommentRepository();
     const mockThreadRepository = new ThreadRepository();
-    const mockUserRepository = new UserRepository();
     const mockReplyRepository = new ReplyRepository();
 
-    mockUserRepository.getUserById = jest
+    mockThreadRepository.verifyThreadAvailability = jest
       .fn()
       .mockImplementation(() => Promise.resolve());
-    mockThreadRepository.getThreadById = jest
-      .fn()
-      .mockImplementation(() => Promise.resolve());
-    mockCommentRepository.getCommentById = jest
+    mockCommentRepository.verifyCommentAvailability = jest
       .fn()
       .mockImplementation(() => Promise.resolve());
     mockReplyRepository.addReply = jest.fn().mockImplementation(() =>
@@ -36,7 +31,6 @@ describe("AddReplyUseCase", () => {
     );
 
     const addReplyUseCase = new AddReplyUseCase({
-      userRepository: mockUserRepository,
       threadRepository: mockThreadRepository,
       commentRepository: mockCommentRepository,
       replyRepository: mockReplyRepository,
@@ -51,9 +45,13 @@ describe("AddReplyUseCase", () => {
       content: useCasePayload.content,
       owner: "user-123",
     });
-    expect(mockUserRepository.getUserById).toBeCalledWith("user-123");
-    expect(mockThreadRepository.getThreadById).toBeCalledWith("thread-123");
-    expect(mockCommentRepository.getCommentById).toBeCalledWith("comment-123");
+
+    expect(mockThreadRepository.verifyThreadAvailability).toBeCalledWith(
+      "thread-123"
+    );
+    expect(mockCommentRepository.verifyCommentAvailability).toBeCalledWith(
+      "comment-123"
+    );
     expect(mockReplyRepository.addReply).toBeCalledWith(
       new AddReply({
         ...useCasePayload,

@@ -13,7 +13,7 @@ class DetailThreadUseCase {
       useCasePayload.id
     );
 
-    const replies = await this._replyRepository.getReplyByThreadId(
+    let replies = await this._replyRepository.getReplyByThreadId(
       useCasePayload.id
     );
 
@@ -21,7 +21,17 @@ class DetailThreadUseCase {
       comment.replies = replies.filter(
         (reply) => reply.comment_id == comment.id
       );
-      if (comment.replies.length > 0) delete comment.replies[0].comment_id;
+
+      comment.replies.forEach((element) => {
+        if (element.is_delete == 1)
+          element.content = "**balasan telah dihapus**";
+        delete element.is_delete;
+        delete element.comment_id;
+      });
+
+      if (comment.is_delete == 1)
+        comment.content = "**komentar telah dihapus**";
+      delete comment.is_delete;
       return comment;
     });
 

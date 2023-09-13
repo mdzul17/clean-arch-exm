@@ -104,4 +104,23 @@ describe("CommentRepositoryPostgres", () => {
       ).resolves.not.toThrow(AuthorizationError);
     });
   });
+  describe("verifyCommentAvailability function", () => {
+    it("should throw NotFoundError when comment is not available", async () => {
+      await CommentsTableTestHelper.addComment({ id: "comment-123" });
+
+      const commentRepository = new CommentRepositoryPostgres(pool, {});
+
+      await expect(
+        commentRepository.verifyCommentAvailability("comment-124")
+      ).rejects.toThrow(NotFoundError);
+    });
+    it("should not throw error when comment is available", async () => {
+      await CommentsTableTestHelper.addComment({ id: "comment-123" });
+      const commentRepository = new CommentRepositoryPostgres(pool, {});
+
+      await expect(
+        commentRepository.verifyCommentAvailability("comment-123")
+      ).resolves.not.toThrow(NotFoundError);
+    });
+  });
 });

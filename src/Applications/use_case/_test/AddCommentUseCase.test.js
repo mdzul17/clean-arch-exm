@@ -1,5 +1,4 @@
 const AddComment = require("../../../Domains/comments/entities/AddComment");
-const UserRepository = require("../../../Domains/users/UserRepository");
 const ThreadRepository = require("../../../Domains/threads/ThreadRepository");
 const CommentRepository = require("../../../Domains/comments/CommentRepository");
 const AddCommentUseCase = require("../AddCommentUserCase");
@@ -11,14 +10,10 @@ describe("AddCommentUseCase", () => {
       thread_id: "thread-123",
     };
 
-    const mockUserRepository = new UserRepository();
     const mockThreadRepository = new ThreadRepository();
     const mockCommentRepository = new CommentRepository();
 
-    mockUserRepository.getUserById = jest
-      .fn()
-      .mockImplementation(() => Promise.resolve());
-    mockThreadRepository.getThreadById = jest
+    mockThreadRepository.verifyThreadAvailability = jest
       .fn()
       .mockImplementation(() => Promise.resolve());
     mockCommentRepository.addComment = jest.fn().mockImplementation(() =>
@@ -30,7 +25,6 @@ describe("AddCommentUseCase", () => {
     );
 
     const addCommentUseCase = new AddCommentUseCase({
-      userRepository: mockUserRepository,
       threadRepository: mockThreadRepository,
       commentRepository: mockCommentRepository,
     });
@@ -44,8 +38,9 @@ describe("AddCommentUseCase", () => {
       content: useCasePayload.content,
       owner: "user-123",
     });
-    expect(mockUserRepository.getUserById).toBeCalledWith("user-123");
-    expect(mockThreadRepository.getThreadById).toBeCalledWith("thread-123");
+    expect(mockThreadRepository.verifyThreadAvailability).toBeCalledWith(
+      "thread-123"
+    );
     expect(mockCommentRepository.addComment).toBeCalledWith(
       new AddComment({
         ...useCasePayload,

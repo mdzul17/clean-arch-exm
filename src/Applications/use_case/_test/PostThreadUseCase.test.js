@@ -1,6 +1,5 @@
 const NewThread = require("../../../Domains/threads/entities/NewThread");
 const PostedThread = require("../../../Domains/threads/entities/PostedThread");
-const UserRepository = require("../../../Domains/users/UserRepository");
 const ThreadRepository = require("../../../Domains/threads/ThreadRepository");
 const PostThreadUseCase = require("../PostThreadUseCase");
 
@@ -17,18 +16,13 @@ describe("PostThreadUseCase", () => {
       owner: "user-123",
     });
 
-    const mockUserRepository = new UserRepository();
     const mockThreadRepository = new ThreadRepository();
 
-    mockUserRepository.getUserById = jest
-      .fn()
-      .mockImplementation(() => Promise.resolve());
     mockThreadRepository.addThread = jest
       .fn()
       .mockImplementation(() => Promise.resolve(mockPostedThread));
 
     const postThreadUseCase = new PostThreadUseCase({
-      userRepository: mockUserRepository,
       threadRepository: mockThreadRepository,
     });
 
@@ -44,7 +38,6 @@ describe("PostThreadUseCase", () => {
       })
     );
 
-    expect(mockUserRepository.getUserById).toBeCalledWith("user-123");
     expect(mockThreadRepository.addThread).toBeCalledWith(
       new NewThread({
         ...useCasePayload,

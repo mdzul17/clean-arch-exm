@@ -1,5 +1,4 @@
 const NotFoundError = require("../../Commons/exceptions/NotFoundError");
-const InvariantError = require("../../Commons/exceptions/InvariantError");
 const AuthorizationError = require("../../Commons/exceptions/AuthorizationError");
 const CommentRepository = require("../../Domains/comments/CommentRepository");
 
@@ -26,7 +25,7 @@ class CommentRepositoryPostgres extends CommentRepository {
 
   async getCommentsByThreadId(id) {
     const query = {
-      text: "SELECT a.id, b.username, a.date, case when a.is_delete = '1' then '**komentar telah dihapus**' else a.content end as content FROM comments a LEFT JOIN users b ON b.id = a.owner WHERE thread_id = $1 order by date asc",
+      text: "SELECT a.id, b.username, a.date, a.is_delete, a.content FROM comments a LEFT JOIN users b ON b.id = a.owner WHERE thread_id = $1 order by date asc",
       values: [id],
     };
     const result = await this._pool.query(query);
@@ -67,18 +66,17 @@ class CommentRepositoryPostgres extends CommentRepository {
     }
   }
 
-  async getCommentById(id) {
+  async verifyCommentAvailability(id) {
     const query = {
-      text: "SELECT a.id, a.content, b.username, a.date, a.thread_id FROM comments a LEFT JOIN users b ON b.id = a.owner WHERE a.id = $1",
+      text: "SELECT * FROM comments WHERE id = $1",
       values: [id],
     };
+
     const result = await this._pool.query(query);
 
     if (!result.rows.length) {
-      throw new NotFoundError("Comment tidak ditemukan!");
+      throw new NotFoundError("Comment tidak tersedia");
     }
-
-    return result.rows[0];
   }
 }
 

@@ -85,4 +85,24 @@ describe("ThreadRepositoryPostgres", () => {
       ).resolves.not.toThrowError(NotFoundError);
     });
   });
+
+  describe("verifyThreadAvailability function", () => {
+    it("should throw NotFoundError when thread is not available", async () => {
+      await ThreadsTableTestHelper.addThread({ id: "thread-123" });
+
+      const threadRepository = new ThreadRepositoryPostgres(pool, {});
+
+      await expect(
+        threadRepository.verifyThreadAvailability("thread-124")
+      ).rejects.toThrow(NotFoundError);
+    });
+    it("should not throw error when thread is available", async () => {
+      await ThreadsTableTestHelper.addThread({ id: "thread-123" });
+      const threadRepository = new ThreadRepositoryPostgres(pool, {});
+
+      await expect(
+        threadRepository.verifyThreadAvailability("thread-123")
+      ).resolves.not.toThrow(NotFoundError);
+    });
+  });
 });
