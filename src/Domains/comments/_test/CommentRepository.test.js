@@ -19,5 +19,9 @@ describe("CommentsRepository", function () {
     await expect(
       commentRepository.verifyCommentAvailability
     ).rejects.toThrowError("COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED");
+
+    await expect(commentRepository.likeComment).rejects.toThrowError(
+      "COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED"
+    );
   });
 });
