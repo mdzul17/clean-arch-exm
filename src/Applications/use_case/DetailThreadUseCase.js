@@ -17,7 +17,13 @@ class DetailThreadUseCase {
       useCasePayload.id
     );
 
+    let likes = await this._commentRepository.getLikeCount(useCasePayload.id);
+
     comments = comments.map((comment) => {
+      const likeCount = likes.filter((like) => like.comment_id == comment.id);
+
+      comment.likeCount = likeCount[0] ? parseInt(likeCount[0].like_count) : 0;
+
       comment.replies = replies.filter(
         (reply) => reply.comment_id == comment.id
       );

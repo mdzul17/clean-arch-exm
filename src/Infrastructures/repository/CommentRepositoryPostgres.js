@@ -78,6 +78,48 @@ class CommentRepositoryPostgres extends CommentRepository {
       throw new NotFoundError("Comment tidak tersedia");
     }
   }
+
+  async likeComment(user_id, thread_id, comment_id) {
+    const query = {
+      text: "INSERT INTO comment_likes VALUES($1, $2, $3) RETURNING comment_id",
+      values: [user_id, thread_id, comment_id],
+    };
+
+    const result = await this._pool.query(query);
+
+    return result.rows[0];
+  }
+
+  async unlikeComment(user_id, thread_id, comment_id) {
+    const query = {
+      text: "DELETE FROM comment_likes WHERE user_id = $1 and thread_id = $2 and comment_id = $3 RETURNING comment_id",
+      values: [user_id, thread_id, comment_id],
+    };
+
+    const result = await this._pool.query(query);
+
+    return result.rows[0];
+  }
+
+  async getLikeCount(thread_id) {
+    const query = {
+      text: "SELECT comment_id, count(*) as like_count FROM comment_likes WHERE thread_id = $1 GROUP BY thread_id, comment_id",
+      values: [thread_id],
+    };
+
+    const result = await this._pool.query(query);
+    return result.rows;
+  }
+
+  async getLikes(thread_id) {
+    const query = {
+      text: "SELECT * FROM comment_likes WHERE thread_id = $1",
+      values: [thread_id],
+    };
+
+    const result = await this._pool.query(query);
+    return result.rows;
+  }
 }
 
 module.exports = CommentRepositoryPostgres;
