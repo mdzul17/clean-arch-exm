@@ -15,6 +15,14 @@ const routes = (handler) => [
       auth: "threadapp_jwt",
     },
   },
+  {
+    method: "PUT",
+    path: "/threads/{threadId}/comments/{commentId}/likes",
+    handler: handler.likeCommentHandler,
+    options: {
+      auth: "threadapp_jwt",
+    },
+  },
 ];
 
 module.exports = routes;

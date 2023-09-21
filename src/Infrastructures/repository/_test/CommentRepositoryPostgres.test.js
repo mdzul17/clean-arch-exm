@@ -5,12 +5,14 @@ const CommentRepositoryPostgres = require("../CommentRepositoryPostgres");
 const CommentsTableTestHelper = require("../../../../tests/CommentsTableTestHelper");
 const ThreadsTableTestHelper = require("../../../../tests/ThreadsTableTestHelper");
 const UsersTableTestHelper = require("../../../../tests/UsersTableTestHelper");
+const CommentLikesTableTestHelper = require("../../../../tests/CommentLikesTableTestHelper");
 
 describe("CommentRepositoryPostgres", () => {
   afterEach(async () => {
     await CommentsTableTestHelper.cleanTable();
     await ThreadsTableTestHelper.cleanTable();
     await UsersTableTestHelper.cleanTable();
+    await CommentLikesTableTestHelper.cleanTable();
   });
 
   afterAll(async () => {
@@ -121,6 +123,118 @@ describe("CommentRepositoryPostgres", () => {
       await expect(
         commentRepository.verifyCommentAvailability("comment-123")
       ).resolves.not.toThrow(NotFoundError);
+    });
+  });
+  describe("likeComment function", () => {
+    it("Should persist like comment", async () => {
+      await CommentsTableTestHelper.addComment({ id: "comment-123" });
+
+      const commentRepository = new CommentRepositoryPostgres(pool, {});
+      await commentRepository.likeComment(
+        "user-123",
+        "thread-123",
+        "comment-123"
+      );
+
+      const likeComment = await CommentLikesTableTestHelper.getLikeCount(
+        "thread-123"
+      );
+
+      expect(likeComment).toHaveLength(1);
+    });
+  });
+
+  describe("unlikeComment function", () => {
+    it("Should persist unlike comment", async () => {
+      await CommentsTableTestHelper.addComment({ id: "comment-123" });
+      await CommentLikesTableTestHelper.addLike(
+        "user-123",
+        "thread-123",
+        "comment-123"
+      );
+
+      const commentRepository = new CommentRepositoryPostgres(pool, {});
+      await commentRepository.unlikeComment(
+        "user-123",
+        "thread-123",
+        "comment-123"
+      );
+
+      const likeComment = await CommentLikesTableTestHelper.getLikeCount(
+        "thread-123"
+      );
+
+      expect(likeComment).toHaveLength(0);
+    });
+  });
+  describe("getLikeCount function", () => {
+    it("Should have 0 length if there is no likes", async () => {
+      await CommentsTableTestHelper.addComment({ id: "comment-123" });
+      await CommentLikesTableTestHelper.addLike(
+        "user-123",
+        "thread-123",
+        "comment-123"
+      );
+
+      const commentRepository = new CommentRepositoryPostgres(pool, {});
+      await commentRepository.unlikeComment(
+        "user-123",
+        "thread-123",
+        "comment-123"
+      );
+
+      const likeComment = await commentRepository.getLikeCount("thread-123");
+
+      expect(likeComment).toHaveLength(0);
+    });
+    it("Should have result 1 length", async () => {
+      await CommentsTableTestHelper.addComment({ id: "comment-123" });
+
+      const commentRepository = new CommentRepositoryPostgres(pool, {});
+      await commentRepository.likeComment(
+        "user-123",
+        "thread-123",
+        "comment-123"
+      );
+
+      const likeComment = await commentRepository.getLikeCount("thread-123");
+
+      expect(likeComment).toHaveLength(1);
+    });
+  });
+  describe("getLikes function", () => {
+    it("Should have 0 length if there is no likes", async () => {
+      await CommentsTableTestHelper.addComment({ id: "comment-123" });
+      await CommentLikesTableTestHelper.addLike(
+        "user-123",
+        "thread-123",
+        "comment-123"
+      );
+
+      const commentRepository = new CommentRepositoryPostgres(pool, {});
+      await commentRepository.unlikeComment(
+        "user-123",
+        "thread-123",
+        "comment-123"
+      );
+
+      const likeComment = await commentRepository.getLikes("thread-123");
+
+      expect(likeComment).toHaveLength(0);
+    });
+    it("Should have result 1 length", async () => {
+      await CommentsTableTestHelper.addComment({ id: "comment-123" });
+
+      const commentRepository = new CommentRepositoryPostgres(pool, {});
+      await commentRepository.likeComment(
+        "user-123",
+        "thread-123",
+        "comment-123"
+      );
+
+      const likeComment = await commentRepository.getLikes("thread-123");
+
+      expect(likeComment).toHaveLength(1);
     });
   });
 });
